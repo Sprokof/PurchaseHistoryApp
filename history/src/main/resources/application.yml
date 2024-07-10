@@ -1,0 +1,7 @@
+kafka:
+  topic:
+    name: users
+    group: users
+
+server:
+  port: 8081

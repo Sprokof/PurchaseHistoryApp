@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>send</title>
+</head>
+<body>
+<button onclick="send()">send</button>
+</body>
+<script>
+    function send() {
+        $.ajax({
+            method: 'POST',
+            url: '/send',
+            success: {
+                window:location.href = 'http://localhost:8080/success'
+            }
+        });
+    }
+</script>
+</html>

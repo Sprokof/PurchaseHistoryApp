@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: sa
+      POSTGRES_DATABASE: purchaseHistoryApp
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - "5435:5435"
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092,PLAINTEXT_INTERNAL://:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  history-app:
+    container_name: history-app
+    build:
+      context: /history/src/docker
+      dockerfile: Dockerfile
+    image: history-app:latest
+    ports:
+      - "18888:8888"
+    networks:
+      - spring-cloud-network
+
+  operations-app:
+    container_name: operations-app
+    build:
+      context: /operations/src/docker
+      dockerfile: Dockerfile
+    image: operations-app:latest
+    ports:
+      - "19999:9999"
+    networks:
+      - spring-cloud-network
+
+networks:
+  spring-cloud-network:
+    driver: bridge
