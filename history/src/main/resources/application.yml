@@ -1,6 +1,6 @@
 spring:
   kafka:
-    producer:
+    consumer:
       bootstrap-servers: kafka:9092
     topic:
       name: users

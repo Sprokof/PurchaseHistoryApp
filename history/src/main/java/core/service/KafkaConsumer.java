@@ -14,7 +14,7 @@ public class KafkaConsumer {
     @Autowired
     private UserService userService;
 
-    @KafkaListener(topics = {"${spring.kafka.topic.name}"}, groupId = "${spring.kafka.users}")
+    @KafkaListener(topics = {"${spring.kafka.topic.name}"}, groupId = "${spring.kafka.topic.group}")
     public void listenToTopic(String message) {
         User user = JsonUtil.readValue(message, User.class);
         userService.create(user);
