@@ -9,10 +9,11 @@ services:
       POSTGRES_PASSWORD: sa
       POSTGRES_DB: purchaseHistoryApp
       POSTGRES_HOST_AUTH_METHOD: trust
+      PGPORT: 5435
     volumes:
       - ./data:/var/lib/postgresql/data
     ports:
-      - "5435:5435"
+      - '5435:5435'
     networks:
       - spring-cloud-network
 
