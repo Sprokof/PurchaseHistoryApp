@@ -4,10 +4,10 @@
 
 <hibernate-configuration>
     <session-factory>
-        <property name="connection.url">jdbc:postgresql://pg:5435/PurchaseHistoryApp</property>
+        <property name="connection.url">jdbc:postgresql://pg:5435/purchaseHistoryApp</property>
         <property name="connection.driver_class">org.postgresql.Driver</property>
-        <property name="connection.username">postgres</property>
-        <property name="connection.password">207315</property>
+        <property name="connection.username">sa</property>
+        <property name="connection.password">sa</property>
         <property name="dialect">org.hibernate.dialect.PostgreSQL9Dialect</property>
     </session-factory>
 </hibernate-configuration>
