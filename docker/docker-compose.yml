@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   postgres:
@@ -8,12 +8,11 @@ services:
       POSTGRES_USER: sa
       POSTGRES_PASSWORD: sa
       POSTGRES_DB: purchaseHistoryApp
-      POSTGRES_HOST_AUTH_METHOD: trust
       PGPORT: 5435
     volumes:
       - ./data:/var/lib/postgresql/data
     ports:
-      - '5435:5435'
+      - "5435:5435"
     networks:
       - spring-cloud-network
 
@@ -53,8 +52,15 @@ services:
   history-app:
     container_name: history-app
     build:
-      dockerfile: ../Dockerfile
+      context: ../history
+      dockerfile: ./Dockerfile
     image: history-app:latest
+    environment:
+      database.driver: org.postgresql.Driver
+      database.url: jdbc:postgresql://pg:5435/purchaseHistoryApp
+      database.username: sa
+      database.password: sa
+      database.dialect: org.hibernate.dialect.PostgreSQL9Dialect
     ports:
       - "18888:8888"
     networks:
@@ -63,7 +69,8 @@ services:
   operations-app:
     container_name: operations-app
     build:
-      dockerfile: ../Dockerfile
+      context: ../operations
+      dockerfile: ./Dockerfile
     image: operations-app:latest
     ports:
       - "19999:9999"

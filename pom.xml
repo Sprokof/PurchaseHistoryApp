@@ -11,6 +11,7 @@
     <modules>
         <module>history</module>
         <module>operations</module>
+        <module>json</module>
     </modules>
 
     <properties>
