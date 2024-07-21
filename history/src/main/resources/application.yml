@@ -1,0 +1,11 @@
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: kafka:9092
+    topic:
+      name: users
+      group: users
+
+server:
+  port: 8081
+
