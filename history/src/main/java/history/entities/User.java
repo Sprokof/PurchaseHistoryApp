@@ -19,7 +19,7 @@ public class User extends BaseEntity {
     @Column(name = "createdAt")
     private LocalDate createdAt;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private PurchaseHistory purchaseHistory;
 
     public User() {
@@ -88,5 +88,14 @@ public class User extends BaseEntity {
                 ", birthDate=" + birthDate +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    public void setPurchaseHistory(PurchaseHistory purchaseHistory) {
+        this.purchaseHistory = purchaseHistory;
+        purchaseHistory.setUser(this);
+    }
+
+    public PurchaseHistory getPurchaseHistory() {
+        return purchaseHistory;
     }
 }

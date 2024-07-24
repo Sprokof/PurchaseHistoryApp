@@ -11,7 +11,9 @@
     <modules>
         <module>history</module>
         <module>operations</module>
-        <module>json</module>
+        <module>core</module>
+        <module>generator</module>
+        <module>load</module>
     </modules>
 
     <properties>

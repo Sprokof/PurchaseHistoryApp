@@ -3,8 +3,8 @@ spring:
     consumer:
       bootstrap-servers: kafka:9092
     topic:
-      name: users
-      group: users
+      name: operations
+      group: operations
 
 server:
   port: 8081

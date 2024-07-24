@@ -2,7 +2,6 @@ package history.repository.hibernate;
 
 import history.entities.User;
 import history.repository.UserRepository;
-import history.repository.hibernate.instanse.SessionFactoryInstance;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -12,8 +11,11 @@ import java.util.logging.Logger;
 
 @Repository
 public class UserRepositoryHibernate implements UserRepository {
-    private static final Logger logger = Logger.getLogger("userRepositoryHibernate");
-    private final SessionFactory sessionFactory = SessionFactoryInstance.instance();
+    private static final Logger logger = Logger.getLogger(UserRepositoryHibernate.class.getSimpleName());
+    private final SessionFactory sessionFactory;
+    public UserRepositoryHibernate(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     public User create(User user) {
