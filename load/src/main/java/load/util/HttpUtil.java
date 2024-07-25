@@ -14,11 +14,12 @@ public class HttpUtil {
     private static final Logger logger = Logger.getLogger(HttpUtil.class.getSimpleName());
     private HttpUtil() {}
 
-    public static void postWithoutBody(String link) {
+    public static void post(String url, String json) {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(link))
+                .uri(URI.create(url))
                 .version(HttpClient.Version.HTTP_1_1)
-                .POST(HttpRequest.BodyPublishers.noBody())
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .setHeader("Content-Type", "application/json")
                 .build();
         try {
             HttpClient

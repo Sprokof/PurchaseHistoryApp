@@ -4,5 +4,6 @@ module load {
     requires spring.boot.autoconfigure;
     requires java.net.http;
     requires java.logging;
+    requires operations;
     requires history;
 }

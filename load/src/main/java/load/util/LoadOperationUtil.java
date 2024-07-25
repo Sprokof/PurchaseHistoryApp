@@ -1,6 +1,7 @@
 package load.util;
 
 import history.entities.enums.OperationType;
+import operations.dto.OperationDto;
 
 import java.time.LocalDate;
 
@@ -10,17 +11,21 @@ public class LoadOperationUtil {
 
     private LoadOperationUtil() {}
 
-    public static String getPriceQueryParam() {
-        return String.valueOf(Math.random());
+    public static OperationDto randomOperationDto() {
+        return new OperationDto(getSum(), getType(), getDate());
     }
 
-    public static String getTypeQueryParam() {
+    private static Double getSum() {
+        return Math.random();
+    }
+
+    public static String getType() {
         OperationType[] types = OperationType.values();
         int index = (int) (Math.random() * types.length);
         return types[index].getValue();
     }
 
-    public static String getDateQueryParam() {
-        return LocalDate.now().toString();
+    private static LocalDate getDate() {
+        return LocalDate.now();
     }
 }

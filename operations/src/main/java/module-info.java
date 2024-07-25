@@ -11,4 +11,6 @@ module operations {
     requires java.logging;
     exports operations.controller;
     exports operations.service;
+    exports operations.dto;
+
 }
