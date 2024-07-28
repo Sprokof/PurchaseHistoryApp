@@ -1,6 +1,6 @@
 package history.entities;
 
-import history.entities.enums.OperationType;
+import core.enums.OperationType;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

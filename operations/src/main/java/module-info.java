@@ -8,9 +8,10 @@ module operations {
     requires spring.boot.autoconfigure;
     requires spring.boot;
     requires com.fasterxml.jackson.databind;
-    requires java.logging;
+    requires ch.qos.logback.core;
+    requires ch.qos.logback.classic;
+    requires org.slf4j;
     exports operations.controller;
     exports operations.service;
-    exports operations.dto;
 
 }

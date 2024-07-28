@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>json</groupId>
+    <groupId>core</groupId>
     <artifactId>core</artifactId>
     <version>1.0-SNAPSHOT</version>
 

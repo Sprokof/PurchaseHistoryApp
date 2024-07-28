@@ -1,7 +1,7 @@
 package load.util;
 
-import history.entities.enums.OperationType;
-import operations.dto.OperationDto;
+import core.dto.OperationDto;
+import core.enums.OperationType;
 
 import java.time.LocalDate;
 

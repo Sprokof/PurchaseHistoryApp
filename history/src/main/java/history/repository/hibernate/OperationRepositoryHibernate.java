@@ -1,19 +1,17 @@
 package history.repository.hibernate;
 
 import history.entities.Operation;
-import history.entities.User;
 import history.repository.OperationRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Repository
 public class OperationRepositoryHibernate implements OperationRepository {
-    private static final Logger logger = Logger.getLogger(OperationRepositoryHibernate.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(OperationRepositoryHibernate.class.getSimpleName());
     private final SessionFactory sessionFactory;
 
     public OperationRepositoryHibernate(SessionFactory sessionFactory) {
@@ -25,20 +23,25 @@ public class OperationRepositoryHibernate implements OperationRepository {
         Session session = null;
         Long id = null;
         try {
+            logger.info("session open");
             session = this.sessionFactory.openSession();
+            logger.info("begin transaction");
             session.beginTransaction();
             id = (Long) session.save(operation);
             session.getTransaction().commit();
+            logger.info("commit transaction");
         }
         catch (Exception e) {
-            logger.log(Level.SEVERE, "exception was thrown ", e);
+            logger.error("exception was thrown ", e);
             if (session != null && session.getTransaction() != null) {
                 session.getTransaction().rollback();
+                logger.info("transaction rollback");
             }
         }
         finally {
             if (session != null) {
                 session.close();
+                logger.info("session close");
             }
         }
         operation.setId(id);

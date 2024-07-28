@@ -1,4 +1,6 @@
-package history.entities.enums;
+package core.enums;
+
+import core.exceptions.UnknownOperationException;
 
 public enum OperationType {
     TRANSFERS("transfers"),
@@ -8,21 +10,20 @@ public enum OperationType {
     SUBSCRIPTIONS("subscriptions"),
     COMMISSION("commission"),
     CAFE_AND_RESTAURANTS("cafe_and_restaurants"),
-    OTHERS("others"),
-    UNKNOWN("unknown");
+    OTHERS("others");
     private final String value;
 
     OperationType(String value) {
         this.value = value;
     }
 
-    public static OperationType ignoreCaseValueOf(String value) {
+    public static OperationType ignoreCaseValueOf(String value) throws UnknownOperationException {
         for(OperationType type : OperationType.values()) {
             if (type.value.equals(value)) {
                 return type;
             }
         }
-        return UNKNOWN;
+        throw new UnknownOperationException("operation type " + value + " not exist");
     }
 
     public String getValue() {
