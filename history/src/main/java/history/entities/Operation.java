@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "operations")
+@Table(name = "operation")
 public class Operation extends BaseEntity {
     private double sum;
     private LocalDate date;
