@@ -3,4 +3,4 @@ spring:
     producer:
       bootstrap-servers: kafka:9092
     topic:
-      name: users
+      name: operations
