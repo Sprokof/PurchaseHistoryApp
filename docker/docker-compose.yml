@@ -1,21 +1,21 @@
 version: '3'
 
 services:
-#  postgres:
-#    container_name: pg
-#    image: postgres:13.3
-#    environment:
-#      POSTGRES_USER: sa
-#      POSTGRES_PASSWORD: sa
-#      POSTGRES_DB: purchaseHistoryApp
-#      PGPORT: 5435
-#    volumes:
-#      - ./data:/var/lib/postgresql/data
-#    ports:
-#      - "5435:5435"
-#    networks:
-#      - spring-cloud-network
-#
+  postgres:
+    container_name: pg
+    image: postgres:13.3
+    environment:
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: sa
+      POSTGRES_DB: purchaseHistoryApp
+      PGPORT: 5435
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - "5435:5435"
+    networks:
+      - spring-cloud-network
+
   zookeeper:
     container_name: zookeeper
     image: confluentinc/cp-zookeeper:latest
@@ -25,7 +25,7 @@ services:
     ports:
       - "22181:2181"
     networks:
-      spring-cloud-network:
+      - spring-cloud-network
 
   kafka:
     container_name: kafka
