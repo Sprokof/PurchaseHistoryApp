@@ -1,38 +1,37 @@
-version: '3.9'
+version: '3'
 
 services:
-  postgres:
-    container_name: pg
-    image: postgres:13.3
-    environment:
-      POSTGRES_USER: sa
-      POSTGRES_PASSWORD: sa
-      POSTGRES_DB: purchaseHistoryApp
-      PGPORT: 5435
-    volumes:
-      - ./data:/var/lib/postgresql/data
-    ports:
-      - "5435:5435"
-    networks:
-      - spring-cloud-network
-
+#  postgres:
+#    container_name: pg
+#    image: postgres:13.3
+#    environment:
+#      POSTGRES_USER: sa
+#      POSTGRES_PASSWORD: sa
+#      POSTGRES_DB: purchaseHistoryApp
+#      PGPORT: 5435
+#    volumes:
+#      - ./data:/var/lib/postgresql/data
+#    ports:
+#      - "5435:5435"
+#    networks:
+#      - spring-cloud-network
+#
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
+    image: confluentinc/cp-zookeeper:latest
     environment:
-      ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "22181:2181"
     networks:
-      - spring-cloud-network
+      spring-cloud-network:
 
   kafka:
     container_name: kafka
-    depends_on:
-    - zookeeper
     image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
     ports:
       - "9092:9092"
       - "29092:29092"
@@ -65,7 +64,7 @@ services:
       - "8084:8084"
     networks:
       - spring-cloud-network
-
+#
   second-history-app:
     container_name: second-history-app
     build:
@@ -85,6 +84,8 @@ services:
 
   operations-app:
     container_name: operations-app
+    depends_on:
+      - kafka
     build:
       context: ../operations
       dockerfile: ./Dockerfile

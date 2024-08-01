@@ -7,13 +7,13 @@ import core.dto.OperationDto;
 import operations.service.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-@Controller
+@RestController
 @RequestMapping("/operations")
 public class OperationsController {
     private static final Logger logger = LoggerFactory.getLogger(OperationsController.class.getSimpleName());
@@ -26,7 +26,7 @@ public class OperationsController {
         this.mapper = mapper;
     }
 
-    @PostMapping
+    @PostMapping(consumes = {"application/json"})
     public HttpStatus send(@RequestBody OperationDto dto) {
         try {
             String message = mapper.writeValueAsString(dto);

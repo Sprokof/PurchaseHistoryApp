@@ -16,7 +16,7 @@ public class LoadOperationUtil {
     }
 
     private static Double getSum() {
-        return Math.random();
+        return Math.random() * (Math.random() * 10);
     }
 
     public static String getType() {

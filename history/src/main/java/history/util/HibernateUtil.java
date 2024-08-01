@@ -8,10 +8,10 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class HibernateUtil {
     private static final String DRIVER = System.getenv("DATABASE_DRIVER");
@@ -19,7 +19,7 @@ public class HibernateUtil {
     private static final String USERNAME = System.getenv("DATABASE_USERNAME");
     private static final String PASSWORD =  System.getenv("DATABASE_PASSWORD");
     private static final String DIALECT = System.getenv("DATABASE_DIALECT");
-    private static final Logger logger = Logger.getLogger(HibernateUtil.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(HibernateUtil.class.getSimpleName());
     private static final Class<?>[] ANNOTATED_CLASSES = new Class[] {User.class, PurchaseHistory.class, Operation.class};
 
     private static Configuration getConfiguration() {
@@ -50,7 +50,7 @@ public class HibernateUtil {
 
             factory = configuration.buildSessionFactory(serviceRegistry);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "exception was thrown", e);
+            logger.error("exception was thrown", e);
         }
         return factory;
     }
