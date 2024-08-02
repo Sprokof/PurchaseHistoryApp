@@ -1,6 +1,5 @@
 spring:
   kafka:
-    producer:
-      bootstrap-servers: kafka:9092
+    bootstrap-servers: kafka:9092
     topic:
       name: operations

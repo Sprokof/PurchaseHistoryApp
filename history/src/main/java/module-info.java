@@ -10,7 +10,6 @@ module history {
     requires java.persistence;
     requires spring.boot.autoconfigure;
     requires spring.boot;
-    requires jakarta.persistence;
     requires com.fasterxml.jackson.databind;
     requires org.slf4j;
     requires spring.web;
