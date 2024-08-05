@@ -1,6 +1,7 @@
 spring:
   kafka:
-    bootstrap-servers: kafka:9092
+    consumer:
+      bootstrap-servers: kafka:29092
     topic:
       name: operations
       group: operations

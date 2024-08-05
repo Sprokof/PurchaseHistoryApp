@@ -13,4 +13,5 @@ module history {
     requires com.fasterxml.jackson.databind;
     requires org.slf4j;
     requires spring.web;
+    requires kafka.clients;
 }
