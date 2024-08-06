@@ -26,6 +26,11 @@ public class OperationsController {
         this.mapper = mapper;
     }
 
+    @GetMapping("/ping")
+    public String ping() {
+        return "healthy";
+    }
+
     @PostMapping(consumes = {"application/json"})
     public HttpStatus send(@RequestBody OperationDto dto) {
         try {
