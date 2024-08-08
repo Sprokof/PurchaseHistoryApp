@@ -23,8 +23,9 @@ public class LoadOperationService implements CommandLineRunner {
             try {
                 String operationJson = mapper.writeValueAsString(LoadOperationUtil.randomOperationDto());
                 logger.info("start request");
-                HttpUtil.post(OPERATION_BASE_URL, operationJson);
+                String response = HttpUtil.post(OPERATION_BASE_URL, operationJson);
                 logger.info("end request");
+                logger.info("response: " + response);
                 if ((i + i) % LoadOperationUtil.COUNT_OPERATIONS_PER_SECOND == 0) {
                     Thread.sleep(10000);
                 }
@@ -32,7 +33,7 @@ public class LoadOperationService implements CommandLineRunner {
                 logger.error("exception was thrown", e);
             }
         }
-        logger.info("all request end. count = " + LoadOperationUtil.COUNT_OPERATIONS);
+        logger.info("all requests end. count = " + LoadOperationUtil.COUNT_OPERATIONS);
     }
 
 }

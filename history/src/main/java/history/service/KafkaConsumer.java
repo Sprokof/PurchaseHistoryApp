@@ -7,6 +7,7 @@ import history.repository.hibernate.OperationRepositoryHibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class KafkaConsumer {
     @KafkaListener(topics = {"${spring.kafka.topic.name}"}, groupId = "${spring.kafka.topic.group}")
     public void listenToTopic(String message) {
         try {
+            logger.info("message from topic operations:" + message);
             Operation operation = mapper.readValue(message, Operation.class);
             operationService.create(operation);
         } catch (JsonProcessingException e) {
