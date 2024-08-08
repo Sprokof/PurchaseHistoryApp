@@ -15,21 +15,25 @@ public class HttpUtil {
     private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class.getSimpleName());
     private HttpUtil() {}
 
-    public static void post(String url, String json) {
+    public static String post(String url, String json) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .version(HttpClient.Version.HTTP_1_1)
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .setHeader("Content-Type", "application/json")
                 .build();
+
+        String responseBody = "";
         try {
-            HttpClient
+            HttpResponse<String> response = HttpClient
                     .newBuilder()
                     .build()
                     .send(request, HttpResponse.BodyHandlers.ofString());
+            responseBody = response.body();
         }
         catch (InterruptedException | IOException e) {
             logger.error("exception was thrown", e);
         }
+        return responseBody;
     }
 }

@@ -1,10 +1,9 @@
 spring:
   kafka:
-    consumer:
       bootstrap-servers: kafka:29092
-    topic:
-      name: operations
-      group: operations
+      topic:
+        name: operations
+        group: operations
 
 server:
   port: 8081
