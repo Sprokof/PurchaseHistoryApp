@@ -1,6 +1,4 @@
 module history {
-    exports history.service;
-    exports history.entities;
     requires java.naming;
     requires core;
     requires spring.beans;

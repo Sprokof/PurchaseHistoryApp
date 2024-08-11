@@ -6,8 +6,8 @@ import core.enums.OperationType;
 import java.time.LocalDate;
 
 public class LoadOperationUtil {
-    public static final int COUNT_OPERATIONS = 3000;
-    public static final int COUNT_OPERATIONS_PER_SECOND = 100;
+    public static final int COUNT_OPERATIONS = 10000;
+    public static final int BATCH_SIZE = 100;
 
     private LoadOperationUtil() {}
 

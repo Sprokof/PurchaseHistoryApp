@@ -1,39 +1,48 @@
 package load.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import load.util.HttpUtil;
 import load.util.LoadOperationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Service;
 
-@Service
-public class LoadOperationService implements CommandLineRunner {
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+public class LoadOperationService  {
     private static final String OPERATION_BASE_URL = "http://operations-app:8080/operations";
     private static final Logger logger = LoggerFactory.getLogger(LoadOperationService.class.getSimpleName());
     private final ObjectMapper mapper;
     public LoadOperationService(ObjectMapper mapper) {
         this.mapper = mapper;
     }
-    @Override
-    public void run(String... args) throws Exception {
-        for (int i = 0; i < LoadOperationUtil.COUNT_OPERATIONS; i ++) {
-            try {
-                String operationJson = mapper.writeValueAsString(LoadOperationUtil.randomOperationDto());
-                logger.info("start request");
-                String response = HttpUtil.post(OPERATION_BASE_URL, operationJson);
-                logger.info("end request");
-                logger.info("response: " + response);
-                if ((i + i) % LoadOperationUtil.COUNT_OPERATIONS_PER_SECOND == 0) {
-                    Thread.sleep(10000);
-                }
-            } catch (JsonProcessingException e) {
-                logger.error("exception was thrown", e);
-            }
-        }
-        logger.info("all requests end. count = " + LoadOperationUtil.COUNT_OPERATIONS);
-    }
 
+    private final ExecutorService executorService = Executors.newFixedThreadPool(100);
+    public void run() throws Exception {
+        for (int i = 0; i < LoadOperationUtil.COUNT_OPERATIONS; i += LoadOperationUtil.BATCH_SIZE) {
+            List<Future<HttpResponse<String>>> requestsResults = new ArrayList<>();
+            for (int j = i; j < (i + LoadOperationUtil.BATCH_SIZE); j ++) {
+                String request = mapper.writeValueAsString(LoadOperationUtil.randomOperationDto());
+                Future<HttpResponse<String>> result = executorService.submit(() -> HttpUtil.post(OPERATION_BASE_URL, request));
+                requestsResults.add(result);
+            }
+            requestsResults.forEach(result -> {
+                try {
+                    var response = result.get();
+                    if (response != null) {
+                        logger.info("body {} status code {}", response.body(), response.statusCode());
+                    } else {
+                        logger.warn("wrong result");
+                    }
+                } catch (ExecutionException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
 }
