@@ -15,7 +15,7 @@ public class HttpUtil {
     private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class.getSimpleName());
     private HttpUtil() {}
 
-    public static String post(String url, String json) {
+    public static HttpResponse<String> post(String url, String json) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .version(HttpClient.Version.HTTP_1_1)
@@ -23,17 +23,16 @@ public class HttpUtil {
                 .setHeader("Content-Type", "application/json")
                 .build();
 
-        String responseBody = "";
+        HttpResponse<String> response = null;
         try {
-            HttpResponse<String> response = HttpClient
+            response = HttpClient
                     .newBuilder()
                     .build()
                     .send(request, HttpResponse.BodyHandlers.ofString());
-            responseBody = response.body();
         }
         catch (InterruptedException | IOException e) {
             logger.error("exception was thrown", e);
         }
-        return responseBody;
+        return response;
     }
 }

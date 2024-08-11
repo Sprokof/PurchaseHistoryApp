@@ -4,7 +4,9 @@ spring:
       topic:
         name: operations
         group: operations
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 server:
   port: 8081
-

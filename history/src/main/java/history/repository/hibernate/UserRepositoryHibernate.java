@@ -20,29 +20,27 @@ public class UserRepositoryHibernate implements UserRepository {
     public User create(User user) {
         Session session = null;
         Long id = null;
-    try {
-        logger.info("open session");
-        session = this.sessionFactory.openSession();
-        logger.info("begin transaction");
-        session.beginTransaction();
-        id = (Long) session.save(user);
-        session.getTransaction().commit();
-        logger.info("commit transaction");
-    }
-    catch (Exception e) {
-        logger.error("exception was thrown ", e);
-        if (session != null && session.getTransaction() != null) {
-            session.getTransaction().rollback();
-            logger.info("rollback transaction");
+        try {
+            logger.info("open session");
+            session = this.sessionFactory.openSession();
+            logger.info("begin transaction");
+            session.beginTransaction();
+            id = (Long) session.save(user);
+            session.getTransaction().commit();
+            logger.info("commit transaction");
+        } catch (Exception e) {
+            logger.error("exception was thrown ", e);
+            if (session != null && session.getTransaction() != null) {
+                session.getTransaction().rollback();
+                logger.info("rollback transaction");
+            }
+        } finally {
+            if (session != null) {
+                session.close();
+                logger.info("close session");
+            }
         }
-    }
-    finally {
-        if (session != null) {
-            session.close();
-            logger.info("close session");
-        }
-    }
-    user.setId(id);
-    return user;
+        user.setId(id);
+        return user;
     }
 }

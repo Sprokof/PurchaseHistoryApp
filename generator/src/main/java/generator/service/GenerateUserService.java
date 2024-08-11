@@ -1,33 +1,35 @@
 package generator.service;
 
-import history.entities.User;
-import history.service.UserService;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Service;
+import core.dto.UserDto;
+import generator.jdbc.UserJdbcRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@Service
-public class GenerateUserService implements CommandLineRunner {
-
+public class GenerateUserService {
     private static final String USERNAME_PREFIX = "username_";
-    private static final int USERS_COUNT = 1000;
-    private final UserService userService;
+    private static final int USERS_COUNT = 2000;
+    private static final Logger log = LoggerFactory.getLogger(GenerateUserService.class);
 
-    public GenerateUserService(UserService userService) {
-        this.userService = userService;
+    private final UserJdbcRepository userRepository;
+
+    public GenerateUserService(UserJdbcRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    @Override
-    public void run(String... args) throws Exception {
+    public void run() throws Exception {
           for (int i = 0; i < USERS_COUNT; i ++) {
               String username = USERNAME_PREFIX + (i + 1);
               String password = PasswordGenerator.generate();
               LocalDate birthDate = DateGenerator.generate();
-              userService.create(new User(username, password, birthDate));
+              UserDto userDto = new UserDto(username, password, birthDate);
+              log.info("save user {}" , userDto);
+              boolean saved = userRepository.save(new UserDto(username, password, birthDate));
+              log.info("user {} saved:{}", userDto, saved);
           }
     }
 
@@ -68,8 +70,7 @@ public class GenerateUserService implements CommandLineRunner {
             int countMonths = (int) (Math.random() * MOTHS_RANGE);
             int countDays = (int) (Math.random() * DAYS_RANGE);
             return CURRENT_DATE.minusYears(countYears)
-                    .minusMonths(countMonths)
-                    .minusDays(countDays);
+                    .minusMonths(countMonths).minusDays(countDays);
         }
     }
 }

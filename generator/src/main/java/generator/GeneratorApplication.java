@@ -1,24 +1,13 @@
 package generator;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
-@SpringBootApplication(scanBasePackages = {"history.service"})
+import generator.jdbc.UserJdbcRepository;
+import generator.service.GenerateUserService;
+
 public class GeneratorApplication {
-
-    @Bean
-    public CommonsRequestLoggingFilter logFilter() {
-        CommonsRequestLoggingFilter filter
-                = new CommonsRequestLoggingFilter();
-        filter.setIncludeQueryString(true);
-        filter.setIncludePayload(true);
-        filter.setMaxPayloadLength(10000);
-        filter.setIncludeHeaders(false);
-        filter.setAfterMessagePrefix("REQUEST DATA: ");
-        return filter;
-    }
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
+    public static void main(String[] args) throws Exception {
+        UserJdbcRepository userJdbcRepository = new UserJdbcRepository();
+        GenerateUserService userService = new GenerateUserService(userJdbcRepository);
+        userService.run();
     }
 }
