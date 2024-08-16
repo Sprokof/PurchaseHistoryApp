@@ -4,12 +4,14 @@ import java.time.LocalDate;
 
 public class OperationDto {
     private double sum;
+    private long userId;
     private String type;
     private LocalDate date;
     public OperationDto() {
     }
 
-    public OperationDto(double sum, String type, LocalDate date) {
+    public OperationDto(long userId, double sum, String type, LocalDate date) {
+        this.userId = userId;
         this.sum = sum;
         this.type = type;
         this.date = date;
@@ -37,5 +39,13 @@ public class OperationDto {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }

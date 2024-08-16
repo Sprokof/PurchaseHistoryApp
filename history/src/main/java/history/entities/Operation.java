@@ -2,10 +2,7 @@ package history.entities;
 
 import core.enums.OperationType;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -15,6 +12,9 @@ public class Operation extends BaseEntity {
     private LocalDate date;
     @Enumerated(value = EnumType.STRING)
     private OperationType type;
+    @ManyToOne
+    @JoinColumn(name = "purchase_history_id")
+    public PurchaseHistory purchaseHistory;
 
     public Operation() {}
     public Operation(double sum, LocalDate date, OperationType type) {
@@ -22,6 +22,7 @@ public class Operation extends BaseEntity {
         this.date = date;
         this.type = type;
     }
+
 
     public double getSum() {
         return sum;
@@ -45,5 +46,22 @@ public class Operation extends BaseEntity {
 
     public void setType(OperationType type) {
         this.type = type;
+    }
+
+    public PurchaseHistory getPurchaseHistory() {
+        return purchaseHistory;
+    }
+
+    public void setPurchaseHistory(PurchaseHistory purchaseHistory) {
+        this.purchaseHistory = purchaseHistory;
+    }
+
+    @Override
+    public String toString() {
+        return "Operation{" +
+                "sum=" + sum +
+                ", date=" + date +
+                ", type=" + type +
+                '}';
     }
 }

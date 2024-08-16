@@ -20,7 +20,7 @@ public class KafkaProducer {
     }
 
     public void sendMessage(String message) {
-        template.send(topic, message);
+        this.template.send(topic, message);
     }
 
 }

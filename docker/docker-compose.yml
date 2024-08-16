@@ -129,6 +129,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      operations-app:
+        condition: service_healthy
     build:
       context: ../generator
       dockerfile: ./Dockerfile
@@ -152,6 +154,12 @@ services:
       context: ../load
       dockerfile: ./Dockerfile
     image: load-app:latest
+    environment:
+      DATABASE_DRIVER: org.postgresql.Driver
+      DATABASE_URL: jdbc:postgresql://pg:5435/purchaseHistoryApp
+      DATABASE_USERNAME: sa
+      DATABASE_PASSWORD: sa
+      DATABASE_DIALECT: org.hibernate.dialect.PostgreSQL9Dialect
     ports:
       - "8089:8089"
     networks:

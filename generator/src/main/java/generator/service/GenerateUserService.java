@@ -13,6 +13,8 @@ import java.util.Random;
 public class GenerateUserService {
     private static final String USERNAME_PREFIX = "username_";
     private static final int USERS_COUNT = 2000;
+
+    private static final double START_BALANCE = 10000.00;
     private static final Logger log = LoggerFactory.getLogger(GenerateUserService.class);
 
     private final UserJdbcRepository userRepository;
@@ -21,14 +23,14 @@ public class GenerateUserService {
         this.userRepository = userRepository;
     }
 
-    public void run() throws Exception {
+    public void run()  {
           for (int i = 0; i < USERS_COUNT; i ++) {
               String username = USERNAME_PREFIX + (i + 1);
               String password = PasswordGenerator.generate();
               LocalDate birthDate = DateGenerator.generate();
-              UserDto userDto = new UserDto(username, password, birthDate);
+              UserDto userDto = new UserDto(username, password, birthDate, START_BALANCE);
               log.info("save user {}" , userDto);
-              boolean saved = userRepository.save(new UserDto(username, password, birthDate));
+              boolean saved = userRepository.save(new UserDto(username, password, birthDate, START_BALANCE));
               log.info("user {} saved:{}", userDto, saved);
           }
     }

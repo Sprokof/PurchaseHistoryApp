@@ -1,9 +1,13 @@
 package history.service;
 
 import history.entities.Operation;
+import history.entities.PurchaseHistory;
+import history.entities.User;
 import history.repository.OperationRepository;
 import org.springframework.stereotype.Service;
 
+
+import java.util.List;
 @Service
 public class OperationService {
 
@@ -16,4 +20,8 @@ public class OperationService {
     public Operation create(Operation operation) {
         return this.operationRepository.create(operation);
     }
+    public List<Operation> getOperationsByUserId(long userId) {
+        return this.operationRepository.getOperationsByUserId(userId);
+    }
+
 }

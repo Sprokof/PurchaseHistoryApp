@@ -1,14 +1,10 @@
 package history.entities;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,7 +18,6 @@ public class PurchaseHistory extends BaseEntity {
 
     public PurchaseHistory() {
     }
-
     public User getUser() {
         return user;
     }
@@ -31,7 +26,7 @@ public class PurchaseHistory extends BaseEntity {
         this.user = user;
     }
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(cascade = {CascadeType.ALL})
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "purchase_history_id")
     private List<Operation> operations;
@@ -40,6 +35,10 @@ public class PurchaseHistory extends BaseEntity {
         if (this.operations == null) {
             this.operations = new LinkedList<>();
         }
+        double current = user.getBalance();
+        current -= operation.getSum();
+        user.setBalance(current);
         this.operations.add(operation);
+        operation.setPurchaseHistory(this);
     }
 }

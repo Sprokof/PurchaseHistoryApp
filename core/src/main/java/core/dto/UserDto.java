@@ -9,17 +9,19 @@ public class UserDto {
     private int age;
     private LocalDate birthDate;
     private LocalDate createdAt;
+    private double balance;
 
     public UserDto() {
         this.createdAt = LocalDate.now();
     }
 
-    public UserDto(String username, String password, LocalDate birthDate) {
+    public UserDto(String username, String password, LocalDate birthDate, double balance) {
         this.username = username;
         this.password = password;
         this.createdAt = LocalDate.now();
         this.birthDate = birthDate;
         this.age = calculateAge();
+        this.balance = balance;
     }
 
 
@@ -65,6 +67,14 @@ public class UserDto {
 
     private int calculateAge() {
         return Period.between(birthDate, LocalDate.now()).getYears();
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
     @Override

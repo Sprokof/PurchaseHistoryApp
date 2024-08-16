@@ -18,6 +18,8 @@ public class User extends BaseEntity {
     private LocalDate birthDate;
     @Column(name = "createdAt")
     private LocalDate createdAt;
+    @Column(name = "balance")
+    private double balance;
 
     @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private PurchaseHistory purchaseHistory;
@@ -26,12 +28,13 @@ public class User extends BaseEntity {
         this.createdAt = LocalDate.now();
     }
 
-    public User(String username, String password, LocalDate birthDate) {
+    public User(String username, String password, LocalDate birthDate, double balance) {
         this.username = username;
         this.password = password;
         this.createdAt = LocalDate.now();
         this.birthDate = birthDate;
         this.age = calculateAge();
+        this.balance = balance;
     }
 
 
@@ -96,6 +99,18 @@ public class User extends BaseEntity {
     }
 
     public PurchaseHistory getPurchaseHistory() {
+        if (purchaseHistory == null) {
+            purchaseHistory = new PurchaseHistory();
+            purchaseHistory.setUser(this);
+        }
         return purchaseHistory;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 }
