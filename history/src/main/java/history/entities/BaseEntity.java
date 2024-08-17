@@ -4,7 +4,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
@@ -12,7 +13,9 @@ import java.util.Objects;
 public abstract class BaseEntity {
 
     @Id
+    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter
     protected Long id;
 
     public BaseEntity(){}
@@ -21,16 +24,8 @@ public abstract class BaseEntity {
         return id == null;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public long id() {
         return this.id;
-    }
-
-    public void setId(Long id){
-        this.id = id;
     }
 
     @Override
@@ -40,8 +35,8 @@ public abstract class BaseEntity {
 
     @Override
     public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if(!(obj instanceof BaseEntity entity)) return false;
+        if (this == obj) return true;
+        if (!(obj instanceof BaseEntity entity)) return false;
         return Objects.equals(this.id, entity.id);
     }
 }

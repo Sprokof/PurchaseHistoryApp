@@ -101,37 +101,6 @@ public class UserRepositoryHibernate implements UserRepository {
     }
 
     @Override
-    public long getRandomId() {
-        Session session = null;
-        long id = 0;
-        try {
-            logger.info("open session");
-            session = this.sessionFactory.openSession();
-            logger.info("begin transaction");
-            session.beginTransaction();
-            int count = (int) session.createQuery("SELECT COUNT(ID) FROM User").getSingleResult();
-            id = (long) session.createQuery("SELECT id FROM User")
-                    .setFirstResult(new Random().nextInt(count))
-                    .setMaxResults(1)
-                    .getSingleResult();
-            session.getTransaction().commit();
-            logger.info("commit transaction");
-        } catch (Exception e) {
-            logger.error("exception wash thrown", e);
-            if (session != null && session.getTransaction() != null) {
-                session.getTransaction().rollback();
-                logger.info("rollback transaction");
-            }
-        } finally {
-            if (session != null) {
-                session.close();
-                logger.info("close session");
-            }
-        }
-        return id;
-    }
-
-    @Override
     public User getWithPurchaseHistoryAndOperations(long id) {
         Session session = null;
         User user = null;

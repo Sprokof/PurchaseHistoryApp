@@ -17,4 +17,8 @@ public class UserBalanceStatistics {
     public static String get(Long userId) {
         return String.format("Operations sum: %s for user with id: %d", usersStatistics.get(userId), userId);
     }
+
+    public static String getAll() {
+        return usersStatistics.toString();
+    }
 }

@@ -20,13 +20,11 @@ import org.springframework.stereotype.Service;
 @EnableKafka
 public class KafkaConsumer {
     private static final Logger logger = LoggerFactory.getLogger(KafkaConsumer.class.getSimpleName());
-    private final OperationService operationService;
     private final UserService userService;
     private final ObjectMapper mapper;
 
     @Autowired
-    public KafkaConsumer(OperationService operationService, UserService userService, ObjectMapper mapper) {
-        this.operationService = operationService;
+    public KafkaConsumer(UserService userService, ObjectMapper mapper) {
         this.userService = userService;
         this.mapper = mapper;
     }

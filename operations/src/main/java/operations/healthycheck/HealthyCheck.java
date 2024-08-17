@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HealthyCheck {
-
     @GetMapping
     @RequestMapping("/operations/ping")
     public String ping() {

@@ -1,6 +1,7 @@
 package generator.service;
 
 import core.dto.UserDto;
+import core.util.UserUtil;
 import generator.jdbc.UserJdbcRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +13,6 @@ import java.util.Random;
 
 public class GenerateUserService {
     private static final String USERNAME_PREFIX = "username_";
-    private static final int USERS_COUNT = 2000;
-
     private static final double START_BALANCE = 10000.00;
     private static final Logger log = LoggerFactory.getLogger(GenerateUserService.class);
 
@@ -24,13 +23,14 @@ public class GenerateUserService {
     }
 
     public void run()  {
-          for (int i = 0; i < USERS_COUNT; i ++) {
+          for (int i = 0; i < UserUtil.USERS_COUNT; i ++) {
               String username = USERNAME_PREFIX + (i + 1);
               String password = PasswordGenerator.generate();
               LocalDate birthDate = DateGenerator.generate();
-              UserDto userDto = new UserDto(username, password, birthDate, START_BALANCE);
+              long id = (i + 1);
+              UserDto userDto = new UserDto(id, username, password, birthDate, START_BALANCE);
               log.info("save user {}" , userDto);
-              boolean saved = userRepository.save(new UserDto(username, password, birthDate, START_BALANCE));
+              boolean saved = userRepository.save(userDto);
               log.info("user {} saved:{}", userDto, saved);
           }
     }

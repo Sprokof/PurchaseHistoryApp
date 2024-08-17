@@ -16,7 +16,7 @@ module history {
     requires com.fasterxml.jackson.databind;
     requires org.slf4j;
     requires spring.web;
-    requires spring.data.jpa;
     requires kafka.clients;
     requires org.hibernate.orm.core;
+    requires static lombok;
 }

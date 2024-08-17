@@ -16,10 +16,6 @@ public class UserService {
         return this.userRepository.create(user);
     }
 
-    public long getRandomId() {
-        return this.userRepository.getRandomId();
-    }
-
     public User getWithPurchaseHistoryAndOperations(long id) {
         return this.userRepository.getWithPurchaseHistoryAndOperations(id);
     }

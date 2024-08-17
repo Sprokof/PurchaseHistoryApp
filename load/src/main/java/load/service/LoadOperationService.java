@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,10 +36,9 @@ public class LoadOperationService implements CommandLineRunner {
             List<Future<HttpResponse<String>>> requestsResults = new ArrayList<>();
             for (int j = i; j < (i + LoadOperationHelper.BATCH_SIZE); j ++) {
                 OperationDto dto = this.operationHelper.randomOperationDto();
-                UserBalanceStatistics.addOperation(dto);
                 String request = this.mapper.writeValueAsString(dto);
-                logger.info(UserBalanceStatistics.get(dto.getUserId()));
                 Future<HttpResponse<String>> result = this.executorService.submit(() -> HttpUtil.post(OPERATION_BASE_URL, request));
+                UserBalanceStatistics.addOperation(dto);
                 requestsResults.add(result);
             }
             requestsResults.forEach(result -> {
@@ -54,6 +54,7 @@ public class LoadOperationService implements CommandLineRunner {
                 }
             });
         }
+        logger.info(UserBalanceStatistics.getAll());
         System.exit(0);
     }
 }

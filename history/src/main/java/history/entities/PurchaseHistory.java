@@ -2,6 +2,7 @@ package history.entities;
 
 import javax.persistence.*;
 
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -10,21 +11,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "purchase_history")
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class PurchaseHistory extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    public PurchaseHistory() {
-    }
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     @OneToMany(cascade = {CascadeType.ALL})
     @OnDelete(action = OnDeleteAction.CASCADE)

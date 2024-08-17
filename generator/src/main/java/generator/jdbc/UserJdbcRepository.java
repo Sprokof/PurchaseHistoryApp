@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class UserJdbcRepository {
-    private static final Logger log = LoggerFactory.getLogger(GenerateUserService.class);
+    private static final Logger log = LoggerFactory.getLogger(UserJdbcRepository.class);
     private static final String SAVE_USER_QUERY = "INSERT INTO USERS (username, password, age, birth_date, createdAt, balance) " +
             "VALUES (?,?,?,?,?,?)";
     private static final String SAVE_PURCHASE_HISTORY_QUERY = "INSERT INTO PURCHASE_HISTORY (userId) " +
