@@ -50,7 +50,7 @@ public class SqlHelper implements CommandLineRunner {
                 output.append((char) c);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            logger.info("exception was thrown ", e);
         }
         return output.toString();
     }
