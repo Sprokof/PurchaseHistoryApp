@@ -1,14 +1,18 @@
 package history.repository.hibernate;
 
+import history.entities.Operation;
 import history.entities.User;
 import history.repository.UserRepository;
 import history.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.graph.EntityGraphs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityGraph;
+import java.util.List;
 import java.util.Random;
 
 @Repository
@@ -104,28 +108,37 @@ public class UserRepositoryHibernate implements UserRepository {
     public User getWithPurchaseHistoryAndOperations(long id) {
         Session session = null;
         User user = null;
+        List<Operation> operations = null;
         try {
-            logger.info("open session");
             session = this.sessionFactory.openSession();
-            logger.info("begin transaction");
+            logger.info("open session");
             session.beginTransaction();
-            user = session.createQuery("SELECT User FROM User as u JOIN " +
-                            "FETCH u.purchaseHistory JOIN FETCH u.purchaseHistory.operations", User.class)
+            logger.info("begin transaction");
+            user = session.createQuery("SELECT u FROM User u JOIN FETCH u.purchaseHistory WHERE u.id =:id", User.class)
+                    .setParameter("id", id)
                     .getSingleResult();
+            operations = session.createQuery("SELECT o FROM Operation o WHERE o.purchaseHistory.user.id =:id", Operation.class)
+                    .setParameter("id", id)
+                    .list();
             session.getTransaction().commit();
             logger.info("commit transaction");
         } catch (Exception e) {
-            logger.error("exception wash thrown", e);
+            logger.error("exception was thrown", e);
             if (session != null && session.getTransaction() != null) {
                 session.getTransaction().rollback();
                 logger.info("rollback transaction");
             }
-        } finally {
+        }
+        finally {
             if (session != null) {
                 session.close();
-                logger.info("close session");
+                logger.info("session close");
             }
+        }
+        if (user != null) {
+            user.getPurchaseHistory().setOperations(operations);
         }
         return user;
     }
+
 }

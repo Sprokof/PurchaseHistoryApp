@@ -27,7 +27,7 @@ public class SqlHelper implements CommandLineRunner {
             session = this.sessionFactory.openSession();
             logger.info("begin transaction");
             session.beginTransaction();
-            session.createNativeQuery(sql);
+            session.createNativeQuery(sql).executeUpdate();
             logger.info("commit transaction");
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -44,9 +44,9 @@ public class SqlHelper implements CommandLineRunner {
     }
     private String readSqlScript() {
         StringBuilder output = new StringBuilder();
-        try(InputStream stream = SqlHelper.class.getResourceAsStream("initDb.sql")) {
-            while(stream != null && stream.available() != -1) {
-                int c = stream.read();
+        try(InputStream stream = SqlHelper.class.getClassLoader().getResourceAsStream("initDb.sql")) {
+            int c =  0;
+            while((c = stream.read()) != -1) {
                 output.append((char) c);
             }
         } catch (IOException e) {

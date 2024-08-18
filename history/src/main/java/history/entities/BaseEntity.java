@@ -13,9 +13,9 @@ import java.util.Objects;
 public abstract class BaseEntity {
 
     @Id
-    @Getter
+    //@Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Setter
+    //@Setter
     protected Long id;
 
     public BaseEntity(){}
@@ -38,5 +38,9 @@ public abstract class BaseEntity {
         if (this == obj) return true;
         if (!(obj instanceof BaseEntity entity)) return false;
         return Objects.equals(this.id, entity.id);
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

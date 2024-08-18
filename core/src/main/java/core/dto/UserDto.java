@@ -5,9 +5,9 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.Period;
 
-@Getter
-@Setter
-@ToString
+//@Getter
+//@Setter
+//@ToString
 public class UserDto {
     private long id;
     private String username;
@@ -28,6 +28,7 @@ public class UserDto {
         this.birthDate = birthDate;
         this.balance = balance;
         this.age = calculateAge();
+        this.createdAt = LocalDate.now();
 
     }
 
@@ -35,5 +36,59 @@ public class UserDto {
         return Period.between(birthDate, LocalDate.now()).getYears();
     }
 
+    public long getId() {
+        return id;
+    }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
 }

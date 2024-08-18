@@ -6,15 +6,16 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 @Entity
 @Table(name = "purchase_history")
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
+//@NoArgsConstructor
+//@Getter
+//@Setter
+//@ToString
 public class PurchaseHistory extends BaseEntity {
 
     @OneToOne
@@ -35,5 +36,24 @@ public class PurchaseHistory extends BaseEntity {
         user.setBalance(current);
         this.operations.add(operation);
         operation.setPurchaseHistory(this);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Operation> getOperations() {
+        if (this.operations == null) {
+            return new ArrayList<>();
+        }
+        return operations;
+    }
+
+    public void setOperations(List<Operation> operations) {
+        this.operations = operations;
     }
 }

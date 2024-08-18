@@ -10,8 +10,8 @@ import java.time.Period;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+//@Getter
+//@Setter
 public class User extends BaseEntity {
     @Column(name = "username", length = 20)
     private String username;
@@ -21,12 +21,12 @@ public class User extends BaseEntity {
     private int age;
     @Column(name = "birth_date")
     private LocalDate birthDate;
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private LocalDate createdAt;
     @Column(name = "balance")
     private double balance;
 
-    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.ALL})
     private PurchaseHistory purchaseHistory;
 
     public User() {
@@ -53,6 +53,7 @@ public class User extends BaseEntity {
                 ", age=" + age +
                 ", birthDate=" + birthDate +
                 ", createdAt=" + createdAt +
+                ", purchase=" + this.purchaseHistory.id +
                 '}';
     }
 
@@ -63,4 +64,58 @@ public class User extends BaseEntity {
         }
         return purchaseHistory;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public void setPurchaseHistory(PurchaseHistory purchaseHistory) {
+        this.purchaseHistory = purchaseHistory;
+    }
+
+
 }

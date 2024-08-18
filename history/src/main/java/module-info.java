@@ -18,5 +18,5 @@ module history {
     requires spring.web;
     requires kafka.clients;
     requires org.hibernate.orm.core;
-    requires static lombok;
+    requires lombok;
 }

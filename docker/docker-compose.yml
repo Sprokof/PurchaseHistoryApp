@@ -60,14 +60,17 @@ services:
   first-history-app:
     container_name: first-history-app
     depends_on:
-      operations-app:
-        condition: service_healthy
       kafka:
         condition: service_healthy
     build:
       context: ../history
       dockerfile: ./Dockerfile
     image: history-app:latest
+    healthcheck:
+      test: "curl http://localhost:8081/history/ping"
+      interval: 10s
+      timeout: 60s
+      start_period: 10s
     environment:
       DATABASE_DRIVER: org.postgresql.Driver
       DATABASE_URL: jdbc:postgresql://pg:5435/purchaseHistoryApp
@@ -82,14 +85,17 @@ services:
   second-history-app:
     container_name: second-history-app
     depends_on:
-      operations-app:
-        condition: service_healthy
       kafka:
         condition: service_healthy
     build:
       context: ../history
       dockerfile: ./Dockerfile
     image: history-app:latest
+    healthcheck:
+      test: "curl http://localhost:8081/history/ping"
+      interval: 10s
+      timeout: 60s
+      start_period: 10s
     environment:
       DATABASE_DRIVER: org.postgresql.Driver
       DATABASE_URL: jdbc:postgresql://pg:5435/purchaseHistoryApp
@@ -105,6 +111,10 @@ services:
     container_name: operations-app
     depends_on:
       kafka:
+        condition: service_healthy
+      first-history-app:
+        condition: service_healthy
+      second-history-app:
         condition: service_healthy
     build:
       context: ../operations
@@ -124,31 +134,37 @@ services:
       - spring-cloud-network
 
 
-  generator-app:
-    container_name: generator-app
-    depends_on:
-      postgres:
-        condition: service_healthy
-      operations-app:
-        condition: service_healthy
-    build:
-      context: ../generator
-      dockerfile: ./Dockerfile
-    image: generator-app:latest
-    environment:
-      DATABASE_DRIVER: org.postgresql.Driver
-      DATABASE_URL: jdbc:postgresql://pg:5435/purchaseHistoryApp
-      DATABASE_USERNAME: sa
-      DATABASE_PASSWORD: sa
-    ports:
-      - "8087:8087"
-    networks:
-      - spring-cloud-network
+#  generator-app:
+#    container_name: generator-app
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      first-history-app:
+#        condition: service_healthy
+#      second-history-app:
+#        condition: service_healthy
+#    build:
+#      context: ../generator
+#      dockerfile: ./Dockerfile
+#    image: generator-app:latest
+#    environment:
+#      DATABASE_DRIVER: org.postgresql.Driver
+#      DATABASE_URL: jdbc:postgresql://pg:5435/purchaseHistoryApp
+#      DATABASE_USERNAME: sa
+#      DATABASE_PASSWORD: sa
+#    ports:
+#      - "8087:8087"
+#    networks:
+#      - spring-cloud-network
 
   load-app:
     container_name: load-app
     depends_on:
       operations-app:
+        condition: service_healthy
+      first-history-app:
+        condition: service_healthy
+      second-history-app:
         condition: service_healthy
     build:
       context: ../load
