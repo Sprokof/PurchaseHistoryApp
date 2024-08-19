@@ -20,12 +20,12 @@ import org.springframework.stereotype.Service;
 @EnableKafka
 public class KafkaConsumer {
     private static final Logger logger = LoggerFactory.getLogger(KafkaConsumer.class.getSimpleName());
-    private final UserService userService;
+    private final PurchaseHistoryService purchaseHistoryService;
     private final ObjectMapper mapper;
 
     @Autowired
-    public KafkaConsumer(UserService userService, ObjectMapper mapper) {
-        this.userService = userService;
+    public KafkaConsumer(PurchaseHistoryService purchaseHistoryService, ObjectMapper mapper) {
+        this.purchaseHistoryService = purchaseHistoryService;
         this.mapper = mapper;
     }
 
@@ -34,11 +34,8 @@ public class KafkaConsumer {
         try {
             logger.info("message from topic operations:" + message);
             OperationDto operationDto = mapper.readValue(message, OperationDto.class);
-            long userId = operationDto.getUserId();
-            User user = this.userService.getWithPurchaseHistoryAndOperations(userId);
-            Operation operation = OperationUtil.fromDto(operationDto);
-            user.getPurchaseHistory().addOperation(operation);
-            this.userService.update(user);
+            boolean added = this.purchaseHistoryService.addOperation(operationDto);
+            logger.info("operation {} added: {}", operationDto, added);
         } catch (JsonProcessingException | UnknownOperationException e) {
             logger.error("exception was thrown", e);
         }

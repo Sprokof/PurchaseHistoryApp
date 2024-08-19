@@ -14,9 +14,10 @@ import java.util.List;
 @Repository
 public class OperationRepositoryHibernate implements OperationRepository {
     private static final Logger logger = LoggerFactory.getLogger(OperationRepositoryHibernate.class.getSimpleName());
+
     private final SessionFactory sessionFactory;
     public OperationRepositoryHibernate(SessionFactory sessionFactory) {
-      this.sessionFactory = sessionFactory;
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
@@ -25,7 +26,7 @@ public class OperationRepositoryHibernate implements OperationRepository {
         Long id = null;
         try {
             logger.info("session open");
-            session = this.sessionFactory.openSession();
+            session = sessionFactory.getCurrentSession();
             logger.info("begin transaction");
             session.beginTransaction();
             id = (Long) session.save(operation);
@@ -50,17 +51,15 @@ public class OperationRepositoryHibernate implements OperationRepository {
     }
 
     @Override
-    public List<Operation> getOperationsByUserId(long userId) {
+    public List<Operation> getAllByUserId(long userId) {
         Session session = null;
         List<Operation> operations = null;
     try {
         logger.info("open session");
-        session = this.sessionFactory.openSession();
+        session = this.sessionFactory.getCurrentSession();
         logger.info("begin transaction");
         session.beginTransaction();
-        operations = session.createQuery("SELECT operation FROM Operation " +
-                "as o WHERE o.purchaseHistory.id = " +
-                "(SELECT p.id FROM purchaseHistory as p WHERE p.user.id =:userId)", Operation.class)
+        operations = session.createQuery("SELECT o FROM Operation o WHERE o.purchaseHistory.user.id =:userId", Operation.class)
                 .setParameter("userId", userId)
                 .list();
         session.getTransaction().commit();
@@ -69,12 +68,6 @@ public class OperationRepositoryHibernate implements OperationRepository {
         if (session != null && session.getTransaction() != null) {
             session.getTransaction().rollback();
             logger.info("rollback transaction");
-        }
-    }
-    finally {
-        if (session != null) {
-            session.close();
-            logger.info("session close");
         }
     }
     return operations;

@@ -12,15 +12,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityGraph;
+import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 
 @Repository
 public class UserRepositoryHibernate implements UserRepository {
     private static final Logger logger = LoggerFactory.getLogger(UserRepositoryHibernate.class.getSimpleName());
     private final SessionFactory sessionFactory;
-
-    public UserRepositoryHibernate(SessionFactory sessionFactory) {
+    public UserRepositoryHibernate (SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -30,7 +31,7 @@ public class UserRepositoryHibernate implements UserRepository {
         Long id = null;
         try {
             logger.info("open session");
-            session = this.sessionFactory.openSession();
+            session = this.sessionFactory.getCurrentSession();
             logger.info("begin transaction");
             session.beginTransaction();
             id = (Long) session.save(user);
@@ -42,11 +43,6 @@ public class UserRepositoryHibernate implements UserRepository {
                 session.getTransaction().rollback();
                 logger.info("rollback transaction");
             }
-        } finally {
-            if (session != null) {
-                session.close();
-                logger.info("close session");
-            }
         }
         user.setId(id);
         return user;
@@ -57,7 +53,7 @@ public class UserRepositoryHibernate implements UserRepository {
         Session session = null;
         try {
             logger.info("open session");
-            session = this.sessionFactory.openSession();
+            session = this.sessionFactory.getCurrentSession();
             logger.info("begin transaction");
             session.beginTransaction();
             session.update(user);
@@ -95,14 +91,10 @@ public class UserRepositoryHibernate implements UserRepository {
                 session.getTransaction().rollback();
                 logger.info("rollback transaction");
             }
-        } finally {
-            if (session != null) {
-                session.close();
-                logger.info("close session");
-            }
         }
         return user;
     }
+
 
     @Override
     public User getWithPurchaseHistoryAndOperations(long id) {
@@ -110,35 +102,28 @@ public class UserRepositoryHibernate implements UserRepository {
         User user = null;
         List<Operation> operations = null;
         try {
-            session = this.sessionFactory.openSession();
             logger.info("open session");
-            session.beginTransaction();
+            session = this.sessionFactory.getCurrentSession();
             logger.info("begin transaction");
+            session.beginTransaction();
             user = session.createQuery("SELECT u FROM User u JOIN FETCH u.purchaseHistory WHERE u.id =:id", User.class)
                     .setParameter("id", id)
                     .getSingleResult();
             operations = session.createQuery("SELECT o FROM Operation o WHERE o.purchaseHistory.user.id =:id", Operation.class)
                     .setParameter("id", id)
                     .list();
-            session.getTransaction().commit();
             logger.info("commit transaction");
+            session.getTransaction().commit();
         } catch (Exception e) {
             logger.error("exception was thrown", e);
             if (session != null && session.getTransaction() != null) {
                 session.getTransaction().rollback();
                 logger.info("rollback transaction");
             }
-        }
-        finally {
-            if (session != null) {
-                session.close();
-                logger.info("session close");
+            if (user != null) {
+                user.getPurchaseHistory().setOperations(operations);
             }
-        }
-        if (user != null) {
-            user.getPurchaseHistory().setOperations(operations);
         }
         return user;
     }
-
 }

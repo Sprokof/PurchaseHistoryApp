@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface OperationRepository {
     Operation create(Operation operation);
-    List<Operation> getOperationsByUserId(long userId);
+    List<Operation> getAllByUserId(long userId);
 }

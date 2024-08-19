@@ -60,6 +60,8 @@ services:
   first-history-app:
     container_name: first-history-app
     depends_on:
+      postgres:
+        condition: service_healthy
       kafka:
         condition: service_healthy
     build:
@@ -85,6 +87,8 @@ services:
   second-history-app:
     container_name: second-history-app
     depends_on:
+      postgres:
+        condition: service_healthy
       kafka:
         condition: service_healthy
     build:
@@ -133,29 +137,28 @@ services:
     networks:
       - spring-cloud-network
 
-
-#  generator-app:
-#    container_name: generator-app
-#    depends_on:
-#      postgres:
-#        condition: service_healthy
-#      first-history-app:
-#        condition: service_healthy
-#      second-history-app:
-#        condition: service_healthy
-#    build:
-#      context: ../generator
-#      dockerfile: ./Dockerfile
-#    image: generator-app:latest
-#    environment:
-#      DATABASE_DRIVER: org.postgresql.Driver
-#      DATABASE_URL: jdbc:postgresql://pg:5435/purchaseHistoryApp
-#      DATABASE_USERNAME: sa
-#      DATABASE_PASSWORD: sa
-#    ports:
-#      - "8087:8087"
-#    networks:
-#      - spring-cloud-network
+  generator-app:
+    container_name: generator-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      first-history-app:
+        condition: service_healthy
+      second-history-app:
+        condition: service_healthy
+    build:
+      context: ../generator
+      dockerfile: ./Dockerfile
+    image: generator-app:latest
+    environment:
+      DATABASE_DRIVER: org.postgresql.Driver
+      DATABASE_URL: jdbc:postgresql://pg:5435/purchaseHistoryApp
+      DATABASE_USERNAME: sa
+      DATABASE_PASSWORD: sa
+    ports:
+      - "8087:8087"
+    networks:
+      - spring-cloud-network
 
   load-app:
     container_name: load-app

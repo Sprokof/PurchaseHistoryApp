@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,22 +32,26 @@ public class LoadOperationService implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         for (int i = 0; i < LoadOperationHelper.COUNT_OPERATIONS; i += LoadOperationHelper.BATCH_SIZE) {
-            List<Future<HttpResponse<String>>> requestsResults = new ArrayList<>();
+            List<Future<Boolean>> requestsResults = new ArrayList<>();
             for (int j = i; j < (i + LoadOperationHelper.BATCH_SIZE); j ++) {
                 OperationDto dto = this.operationHelper.randomOperationDto();
                 String request = this.mapper.writeValueAsString(dto);
-                Future<HttpResponse<String>> result = this.executorService.submit(() -> HttpUtil.post(OPERATION_BASE_URL, request));
-                UserBalanceStatistics.addOperation(dto);
+                Future<Boolean> result = this.executorService.submit(() -> {
+                    var response = HttpUtil.post(OPERATION_BASE_URL, request);
+                    if (response != null && response.statusCode() == 200) {
+                        logger.info("body {} status code {}", response.body(), response.statusCode());
+                        UserBalanceStatistics.addOperation(dto);
+                        return true;
+                    } else {
+                        logger.warn("wrong result");
+                        return false;
+                    }
+                });
                 requestsResults.add(result);
             }
             requestsResults.forEach(result -> {
                 try {
-                    var response = result.get();
-                    if (response != null) {
-                        logger.info("body {} status code {}", response.body(), response.statusCode());
-                    } else {
-                        logger.warn("wrong result");
-                    }
+                    result.get();
                 } catch (ExecutionException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }

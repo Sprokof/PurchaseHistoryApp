@@ -4,9 +4,10 @@ import core.dto.OperationDto;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UserBalanceStatistics {
-    private static final Map<Long, Double> usersStatistics = new HashMap<>();
+    private static final Map<Long, Double> usersStatistics = new ConcurrentHashMap<>();
 
     public static void addOperation(OperationDto dto) {
         long userId = dto.getUserId();

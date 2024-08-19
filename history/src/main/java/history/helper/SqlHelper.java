@@ -15,7 +15,6 @@ public class SqlHelper implements CommandLineRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(SqlHelper.class.getSimpleName());
     private final SessionFactory sessionFactory;
-
     public SqlHelper(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

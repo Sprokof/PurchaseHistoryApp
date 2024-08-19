@@ -27,9 +27,9 @@ public class UserJdbcRepository {
           usersRowsUpdated = statement.executeUpdate();
           ResultSet keys = statement.getGeneratedKeys();
           if (keys.next()) {
-              PreparedStatement preparedStatement = con.prepareStatement(SAVE_PURCHASE_HISTORY_QUERY);
-              preparedStatement.setLong(1, keys.getLong(1));
-              purchaseHistoryRowsUpdated = preparedStatement.executeUpdate();
+              statement = con.prepareStatement(SAVE_PURCHASE_HISTORY_QUERY);
+              statement.setLong(1, keys.getLong(1));
+              purchaseHistoryRowsUpdated = statement.executeUpdate();
           }
         } catch (SQLException e) {
             log.error("exception was thrown ", e);

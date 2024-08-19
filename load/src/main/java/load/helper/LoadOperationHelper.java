@@ -10,10 +10,12 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Random;
+
 @Component
 public class LoadOperationHelper {
     public static final int COUNT_OPERATIONS = 10000;
-    public static final int BATCH_SIZE = 100;
+    public static final int BATCH_SIZE = 1000;
     public LoadOperationHelper() {
     }
 
@@ -22,7 +24,7 @@ public class LoadOperationHelper {
     }
 
     private Double getSum() {
-        return Math.random() * (Math.random() * 100);
+        return (Math.random() * 20) * (Math.random() * 100);
     }
 
     private String getType() {
@@ -36,7 +38,7 @@ public class LoadOperationHelper {
     }
 
     private long getRandomUserId() {
-        long id = (long) (Math.random() * UserUtil.USERS_COUNT);
+        long id = new Random().nextInt(UserUtil.USERS_COUNT);
         return id == 0 ? 1 : id;
     }
 }

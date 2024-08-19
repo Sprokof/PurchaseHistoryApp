@@ -20,8 +20,8 @@ public class OperationService {
     public Operation create(Operation operation) {
         return this.operationRepository.create(operation);
     }
-    public List<Operation> getOperationsByUserId(long userId) {
-        return this.operationRepository.getOperationsByUserId(userId);
+    public List<Operation> getAllByUserId(long userId) {
+        return this.operationRepository.getAllByUserId(userId);
     }
 
 }

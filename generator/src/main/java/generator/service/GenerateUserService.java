@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class GenerateUserService {
     private static final String USERNAME_PREFIX = "username_";
-    private static final double START_BALANCE = 10000.00;
+    private static final double START_BALANCE = 100000d;
     private static final Logger log = LoggerFactory.getLogger(GenerateUserService.class);
 
     private final UserJdbcRepository userRepository;
@@ -23,7 +23,7 @@ public class GenerateUserService {
     }
 
     public void run()  {
-          for (int i = 0; i < UserUtil.USERS_COUNT; i ++) {
+          for (int i = 0; i < UserUtil.USERS_COUNT + 1; i ++) {
               String username = USERNAME_PREFIX + (i + 1);
               String password = PasswordGenerator.generate();
               LocalDate birthDate = DateGenerator.generate();

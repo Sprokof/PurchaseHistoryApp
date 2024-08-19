@@ -9,6 +9,7 @@ module history {
     requires core;
     requires spring.beans;
     requires spring.kafka;
+    requires spring.tx;
     requires spring.context;
     requires java.persistence;
     requires spring.boot.autoconfigure;

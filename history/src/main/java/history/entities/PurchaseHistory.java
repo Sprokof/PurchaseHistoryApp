@@ -12,13 +12,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "purchase_history")
-//@NoArgsConstructor
-//@Getter
-//@Setter
-//@ToString
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class PurchaseHistory extends BaseEntity {
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -27,23 +27,13 @@ public class PurchaseHistory extends BaseEntity {
     @JoinColumn(name = "purchase_history_id")
     private List<Operation> operations;
 
+
     public void addOperation(Operation operation) {
         if (this.operations == null) {
-            this.operations = new LinkedList<>();
+            this.operations = new ArrayList<>();
         }
-        double current = user.getBalance();
-        current -= operation.getSum();
-        user.setBalance(current);
         this.operations.add(operation);
         operation.setPurchaseHistory(this);
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public List<Operation> getOperations() {
@@ -51,9 +41,5 @@ public class PurchaseHistory extends BaseEntity {
             return new ArrayList<>();
         }
         return operations;
-    }
-
-    public void setOperations(List<Operation> operations) {
-        this.operations = operations;
     }
 }
