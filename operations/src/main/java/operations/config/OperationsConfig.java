@@ -15,7 +15,7 @@ public class OperationsConfig {
     private String topic;
     @Bean
     public NewTopic newTopic() {
-        return new NewTopic(topic, 1, (short) 1);
+        return new NewTopic(topic, 4, (short) 1);
     }
 
     @Bean

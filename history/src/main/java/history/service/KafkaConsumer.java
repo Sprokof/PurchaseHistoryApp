@@ -2,8 +2,12 @@ package history.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import core.dto.OperationDto;
+import core.exceptions.UnknownOperationException;
 import history.entities.Operation;
+import history.entities.User;
 import history.repository.hibernate.OperationRepositoryHibernate;
+import history.util.OperationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +19,13 @@ import org.springframework.stereotype.Service;
 @Service
 @EnableKafka
 public class KafkaConsumer {
-    private static final Logger logger = LoggerFactory.getLogger(OperationRepositoryHibernate.class.getSimpleName());
-    private final OperationService operationService;
+    private static final Logger logger = LoggerFactory.getLogger(KafkaConsumer.class.getSimpleName());
+    private final PurchaseHistoryService purchaseHistoryService;
     private final ObjectMapper mapper;
 
     @Autowired
-    public KafkaConsumer(OperationService operationService, ObjectMapper mapper) {
-        this.operationService = operationService;
+    public KafkaConsumer(PurchaseHistoryService purchaseHistoryService, ObjectMapper mapper) {
+        this.purchaseHistoryService = purchaseHistoryService;
         this.mapper = mapper;
     }
 
@@ -29,9 +33,10 @@ public class KafkaConsumer {
     public void listenToTopic(String message) {
         try {
             logger.info("message from topic operations:" + message);
-            Operation operation = mapper.readValue(message, Operation.class);
-            operationService.create(operation);
-        } catch (JsonProcessingException e) {
+            OperationDto operationDto = mapper.readValue(message, OperationDto.class);
+            boolean added = this.purchaseHistoryService.addOperation(operationDto);
+            logger.info("operation {} added: {}", operationDto, added);
+        } catch (JsonProcessingException | UnknownOperationException e) {
             logger.error("exception was thrown", e);
         }
     }

@@ -1,45 +1,45 @@
 package history.entities;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 @Entity
 @Table(name = "purchase_history")
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class PurchaseHistory extends BaseEntity {
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
-    public PurchaseHistory() {
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(cascade = {CascadeType.ALL})
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "purchase_history_id")
     private List<Operation> operations;
 
+
     public void addOperation(Operation operation) {
         if (this.operations == null) {
-            this.operations = new LinkedList<>();
+            this.operations = new ArrayList<>();
         }
         this.operations.add(operation);
+        operation.setPurchaseHistory(this);
+    }
+
+    public List<Operation> getOperations() {
+        if (this.operations == null) {
+            return new ArrayList<>();
+        }
+        return operations;
     }
 }

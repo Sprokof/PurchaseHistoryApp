@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Properties;
 
 public class HibernateUtil {
+    private static SessionFactory sessionFactory;
     private static final String DRIVER = System.getenv("DATABASE_DRIVER");
     private static final String URL = System.getenv("DATABASE_URL");
     private static final String USERNAME = System.getenv("DATABASE_USERNAME");
@@ -30,7 +31,7 @@ public class HibernateUtil {
         settings.put(Environment.USER, USERNAME);
         settings.put(Environment.PASS, PASSWORD);
         settings.put(Environment.DIALECT, DIALECT);
-        settings.put(Environment.SHOW_SQL, "true");
+        settings.put(Environment.SHOW_SQL, "false");
         settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
 
         configuration.setProperties(settings);
