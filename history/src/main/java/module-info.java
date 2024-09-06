@@ -3,6 +3,7 @@ module history {
     exports history.service;
     exports history.repository;
     exports history.config;
+    exports history.manager;
     exports history.repository.hibernate;
     exports history.util;
     requires java.naming;

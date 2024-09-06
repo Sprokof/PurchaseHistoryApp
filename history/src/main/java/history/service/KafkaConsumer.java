@@ -14,14 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @EnableKafka
+@EnableScheduling
 public class KafkaConsumer {
     private static final Logger logger = LoggerFactory.getLogger(KafkaConsumer.class.getSimpleName());
     private final PurchaseHistoryService purchaseHistoryService;
     private final ObjectMapper mapper;
+    public static final AtomicInteger counter = new AtomicInteger(0);
 
     @Autowired
     public KafkaConsumer(PurchaseHistoryService purchaseHistoryService, ObjectMapper mapper) {
@@ -35,9 +41,14 @@ public class KafkaConsumer {
             logger.info("message from topic operations:" + message);
             OperationDto operationDto = mapper.readValue(message, OperationDto.class);
             boolean added = this.purchaseHistoryService.addOperation(operationDto);
-            logger.info("operation {} added: {}", operationDto, added);
+            logger.info("added: {}", added);
+            counter.incrementAndGet();
         } catch (JsonProcessingException | UnknownOperationException e) {
             logger.error("exception was thrown", e);
         }
+    }
+    @Scheduled(fixedRate = (30 * 1000))
+    private static void task() {
+        logger.info("count {}", counter.intValue());
     }
 }
