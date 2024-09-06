@@ -55,7 +55,7 @@ public class User extends BaseEntity {
                 ", age=" + age +
                 ", birthDate=" + birthDate +
                 ", createdAt=" + createdAt +
-                ", purchase=" + this.purchaseHistory.id +
+                ", purchaseHistoryId=" + this.purchaseHistory.id +
                 '}';
     }
 

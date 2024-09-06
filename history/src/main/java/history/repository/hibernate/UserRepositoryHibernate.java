@@ -100,18 +100,15 @@ public class UserRepositoryHibernate implements UserRepository {
     public User getWithPurchaseHistoryAndOperations(long id) {
         Session session = null;
         User user = null;
-        List<Operation> operations = null;
         try {
             logger.info("open session");
             session = this.sessionFactory.getCurrentSession();
             logger.info("begin transaction");
             session.beginTransaction();
-            user = session.createQuery("SELECT u FROM User u JOIN FETCH u.purchaseHistory WHERE u.id =:id", User.class)
+            user = session.createQuery("SELECT u FROM User u JOIN FETCH u.purchaseHistory " +
+                            " p LEFT JOIN FETCH p.operations WHERE u.id =:id", User.class)
                     .setParameter("id", id)
                     .getSingleResult();
-            operations = session.createQuery("SELECT o FROM Operation o WHERE o.purchaseHistory.user.id =:id", Operation.class)
-                    .setParameter("id", id)
-                    .list();
             logger.info("commit transaction");
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -119,9 +116,6 @@ public class UserRepositoryHibernate implements UserRepository {
             if (session != null && session.getTransaction() != null) {
                 session.getTransaction().rollback();
                 logger.info("rollback transaction");
-            }
-            if (user != null) {
-                user.getPurchaseHistory().setOperations(operations);
             }
         }
         return user;

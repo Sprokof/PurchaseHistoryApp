@@ -7,7 +7,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -15,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 public class PurchaseHistory extends BaseEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -32,6 +30,9 @@ public class PurchaseHistory extends BaseEntity {
         if (this.operations == null) {
             this.operations = new ArrayList<>();
         }
+        double currentBalance = this.user.getBalance();
+        currentBalance -= operation.getSum();
+        this.user.setBalance(currentBalance);
         this.operations.add(operation);
         operation.setPurchaseHistory(this);
     }
@@ -41,5 +42,12 @@ public class PurchaseHistory extends BaseEntity {
             return new ArrayList<>();
         }
         return operations;
+    }
+
+    @Override
+    public String toString() {
+        return "PurchaseHistory{" +
+                "id=" + id +
+                '}';
     }
 }

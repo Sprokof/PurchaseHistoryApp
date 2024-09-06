@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 public class Operation extends BaseEntity {
 
     @Column(name = "sum")
@@ -27,4 +26,13 @@ public class Operation extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "purchase_history_id")
     private PurchaseHistory purchaseHistory;
+
+    @Override
+    public String toString() {
+        return "Operation{" +
+                "sum=" + sum +
+                ", date=" + date +
+                ", type=" + type +
+                '}';
+    }
 }
